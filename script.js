@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     var touchArea = document.getElementById('touchArea');
+    var tapSound = document.getElementById('tapSound');
+    var swipeSound = document.getElementById('swipeSound');
     var debug = document.getElementById('Debug');
 
     var touchstartX = 0;
@@ -20,12 +22,15 @@ document.addEventListener('DOMContentLoaded', function() {
         if (Math.abs(deltaX) > Math.abs(deltaY)) {
             if (deltaX > 30) {
                 gesture = 'Right';
+                swipeSound.play();
             } else if (deltaX < -30) {
                 gesture = 'Left';
+                swipeSound.play();
             }
         } else {
             if (deltaY < -30) {
                 gesture = 'Up';
+                swipeSound.play();
             }
         }
     }
@@ -57,8 +62,12 @@ document.addEventListener('DOMContentLoaded', function() {
             if (initialPinchDistance) {
                 if (currentPinchDistance > initialPinchDistance) {
                     debug.innerHTML = 'Zoom Out';
+                    tapSound.play();
+                    swipeSound.play();
                 } else {
                     debug.innerHTML = 'Zoom In';
+                    swipeSound.play();
+                    tapSound.play();
                 }
             }
             initialPinchDistance = currentPinchDistance;
@@ -82,15 +91,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     switch (tapCount) {
                         case 1:
                             tapGesture = 'Single Tap';
+                            tapSound.play();
                             break;
                         case 2:
                             tapGesture = 'Double Tap';
+                            tapSound.play();
                             break;
                         case 3:
                             tapGesture = 'Triple Tap';
+                            tapSound.play();
                             break;
                         case 4:
                             tapGesture = "Four Taps";
+                            tapSound.play();
                             break;
                     }
                     debug.innerHTML = tapGesture;
