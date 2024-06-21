@@ -4,74 +4,95 @@ document.addEventListener('DOMContentLoaded', function() {
     var touchendX = 0;
     var touchendY = 0;
     var gesture = '';
-    var minDistance = 30; // Minimum distance to register a direction change
+    var tapCount = 0;
+    var tapTimeout;
+    var twoFingerTapCount = 0;
+    var twoFingerTapTimeout;
+  
+    function detectGesture() {
+      var deltaX = touchendX - touchstartX;
+      var deltaY = touchendY - touchstartY;
+  
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // Horizontal swipe
+        if (deltaX > 30) {
+          gesture = 'Right';
+        } else if (deltaX < -30) {
+          gesture = 'Left';
+        }
+      } else {
+        // Vertical swipe
+        if (deltaY < -30) {
+          gesture = 'Up';
+        }
+      }
+    }
   
     document.addEventListener('touchstart', function(event) {
-      touchstartX = event.touches[0].pageX;
-      touchstartY = event.touches[0].pageY;
-      gesture = ''; // Reset gesture on new touchstart
+      if (event.touches.length === 1) {
+        touchstartX = event.touches[0].pageX;
+        touchstartY = event.touches[0].pageY;
+      } else if (event.touches.length === 2) {
+        touchstartX = (event.touches[0].pageX + event.touches[1].pageX) / 2;
+        touchstartY = (event.touches[0].pageY + event.touches[1].pageY) / 2;
+      }
     }, false);
   
     document.addEventListener('touchmove', function(event) {
-      event.preventDefault();
-      var touchmoveX = event.touches[0].pageX;
-      var touchmoveY = event.touches[0].pageY;
-      var deltaX = touchmoveX - touchstartX;
-      var deltaY = touchmoveY - touchstartY;
-  
-      // Detect significant movements only
-      if (Math.abs(deltaX) > minDistance || Math.abs(deltaY) > minDistance) {
-        if (Math.abs(deltaX) > Math.abs(deltaY)) {
-          // Horizontal movement
-          if (deltaX > 0) {
-            gesture += 'R'; // Right
-          } else {
-            gesture += 'L'; // Left
-          }
-        } else {
-          // Vertical movement
-          if (deltaY > 0) {
-            gesture += 'D'; // Down
-          } else {
-            gesture += 'U'; // Up
-          }
-        }
-  
-        // Update the start coordinates for the next segment
-        touchstartX = touchmoveX;
-        touchstartY = touchmoveY;
+      if (event.touches.length === 1 || event.touches.length === 2) {
+        event.preventDefault();
       }
     }, false);
   
     document.addEventListener('touchend', function(event) {
-      touchendX = event.changedTouches[0].pageX;
-      touchendY = event.changedTouches[0].pageY;
+      if (event.touches.length === 0 && event.changedTouches.length === 1) {
+        touchendX = event.changedTouches[0].pageX;
+        touchendY = event.changedTouches[0].pageY;
+        detectGesture();
   
-      // Map gesture to alphabet (A-Z)
-      var detectedLetter = '';
-  
-      switch (gesture) {
-        case 'RDLU':
-          detectedLetter = 'A';
-          break;
-        case 'RUL':
-          detectedLetter = 'B';
-          break;
-        case 'RDL':
-          detectedLetter = 'C';
-          break;
-        case 'LURD':
-          detectedLetter = 'D';
-          break;
-        case 'LR':
-          detectedLetter = 'E';
-          break;
-        // Add more cases for each alphabet letter (F-Z)
-        default:
-          detectedLetter = 'Unknown gesture: ' + gesture;
+        if (gesture) {
+          document.getElementById("Debug").innerHTML = gesture;
+          gesture = '';
+        } else {
+          tapCount++;
+          clearTimeout(tapTimeout);
+          tapTimeout = setTimeout(function() {
+            var tapGesture = '';
+            switch (tapCount) {
+              case 1:
+                tapGesture = 'Single Tap';
+                break;
+              case 2:
+                tapGesture = 'Double Tap';
+                break;
+              case 3:
+                tapGesture = 'Triple Tap';
+                break;
+            }
+            document.getElementById("Debug").innerHTML = tapGesture;
+            tapCount = 0;
+          }, 300);
+        }
+      } else if (event.touches.length === 0 && event.changedTouches.length === 2) {
+        twoFingerTapCount++;
+        clearTimeout(twoFingerTapTimeout);
+        twoFingerTapTimeout = setTimeout(function() {
+          var twoFingerTapGesture = '';
+          switch (twoFingerTapCount) {
+            case 1:
+              twoFingerTapGesture = 'Two Finger Single Tap';
+              break;
+            case 2:
+              twoFingerTapGesture = 'Two Finger Double Tap';
+              break;
+            case 3:
+              twoFingerTapGesture = 'Two Finger Triple Tap';
+              break;
+          }
+          document.getElementById("Debug").innerHTML = twoFingerTapGesture;
+          twoFingerTapCount = 0;
+        }, 300);
       }
-  
-      document.getElementById("Debug").innerHTML = detectedLetter;
     }, false);
   });
   
