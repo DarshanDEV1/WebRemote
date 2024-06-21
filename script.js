@@ -22,8 +22,10 @@ function handleSwipe() {
     if (touchendX < touchstartX) {
         // Swipe left
         console.log('Swiped left');
+        document.getElementById("Debug").innerHTML = "Swiped Left";
     } else if (touchendX > touchstartX) {
         // Swipe right
         console.log('Swiped right');
+        document.getElementById("Debug").innerHTML = "Swiped Right";
     }
 }
