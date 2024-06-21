@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
     var tapCount = 0;
     var tapTimeout;
     var mouseMode = true;
+    var beepQueue = [];
+    var isPlaying = false;
 
     function detectGesture() {
         var deltaX = touchendX - touchstartX;
@@ -38,11 +40,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function playBeep(count) {
-        if (count > 0) {
-            tapSound.play();
-            setTimeout(function() {
-                playBeep(count - 1);
-            }, 200);  // Slight delay to ensure distinct beeps
+        for (var i = 0; i < count; i++) {
+            beepQueue.push(tapSound);
+        }
+        if (!isPlaying) {
+            playNextBeep();
+        }
+    }
+
+    function playNextBeep() {
+        if (beepQueue.length > 0) {
+            isPlaying = true;
+            var sound = beepQueue.shift();
+            sound.play();
+            sound.onended = function() {
+                playNextBeep();
+            };
+        } else {
+            isPlaying = false;
         }
     }
 
@@ -114,11 +129,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             playBeep(3);
                             break;
                         case 4:
-                            tapGesture = 'Four Taps';
+                            tapGesture = "Four Taps";
                             playBeep(4);
-                            break;
-                        default:
-                            tapGesture = "Above 4 Is Not Allowed";
                             break;
                     }
                     debug.innerHTML = tapGesture;
