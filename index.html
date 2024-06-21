@@ -80,11 +80,12 @@
         <span class="mode-text">Remote</span>
     </div>
     <div class="connect-container">
-        <input type="text" placeholder="Enter connection ID">
-        <button>Connect</button>
+        <input type="text" id="serverUrl" placeholder="Enter server URL">
+        <button id="connectBtn">Connect</button>
     </div>
     <audio id="tapSound" src="music/beep.mp3"></audio>
     <audio id="swipeSound" src="music/swipe.mp3"></audio>
+    <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

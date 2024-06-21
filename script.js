@@ -4,7 +4,10 @@ document.addEventListener('DOMContentLoaded', function() {
     var swipeSound = document.getElementById('swipeSound');
     var debug = document.getElementById('Debug');
     var modeToggle = document.getElementById('modeToggle');
+    var serverUrlInput = document.getElementById('serverUrl');
+    var connectBtn = document.getElementById('connectBtn');
 
+    var socket;
     var touchstartX = 0;
     var touchstartY = 0;
     var touchendX = 0;
@@ -24,17 +27,21 @@ document.addEventListener('DOMContentLoaded', function() {
             if (deltaX > 30) {
                 gesture = 'Right';
                 swipeSound.play();
+                emitAction('swipe_right');
             } else if (deltaX < -30) {
                 gesture = 'Left';
                 swipeSound.play();
+                emitAction('swipe_left');
             }
         } else {
             if (deltaY < -30) {
                 gesture = 'Up';
                 swipeSound.play();
+                emitAction('swipe_up');
             } else if (deltaY > 30) {
                 gesture = 'Down';
                 swipeSound.play();
+                emitAction('swipe_down');
             }
         }
     }
@@ -75,6 +82,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function emitAction(action) {
+        if (socket) {
+            socket.emit('action_signal', { signal: action });
+        }
+    }
+
     modeToggle.addEventListener('click', function() {
         mouseMode = !mouseMode;
         modeToggle.classList.toggle('on');
@@ -97,6 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var x = touch.pageX;
             var y = touch.pageY;
             debug.innerHTML = 'Coordinates: (' + x + ', ' + y + ')';
+            emitAction(`mouse_move:${x},${y}`);
         }
     }, false);
 
@@ -119,18 +133,22 @@ document.addEventListener('DOMContentLoaded', function() {
                         case 1:
                             tapGesture = 'Single Tap';
                             playBeep(1);
+                            emitAction('single_tap');
                             break;
                         case 2:
                             tapGesture = 'Double Tap';
                             playBeep(2);
+                            emitAction('double_tap');
                             break;
                         case 3:
                             tapGesture = 'Triple Tap';
                             playBeep(3);
+                            emitAction('triple_tap');
                             break;
                         case 4:
-                            tapGesture = "Four Taps";
+                            tapGesture = 'Four Taps';
                             playBeep(4);
+                            emitAction('four_taps');
                             break;
                     }
                     debug.innerHTML = tapGesture;
@@ -139,6 +157,20 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }, false);
+
+    connectBtn.addEventListener('click', function() {
+        var serverUrl = serverUrlInput.value.trim();
+        if (serverUrl) {
+            socket = io(serverUrl);
+            socket.on('connect', function() {
+                debug.innerHTML = 'Connected to server';
+            });
+            socket.on('disconnect', function() {
+                debug.innerHTML = 'Disconnected from server';
+                socket = null;
+            });
+        }
+    });
 
     updateTheme();
 });
