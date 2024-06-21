@@ -1,0 +1,14 @@
+{
+    "name": "mobile-controller-app",
+    "version": "1.0.0",
+    "description": "Mobile controller web application with real-time communication using Socket.io",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js"
+    },
+    "dependencies": {
+        "express": "^4.19.2",
+        "socket.io": "^4.7.5",
+        "uuid": "^8.3.2"
+    }
+}
