@@ -1,8 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     var touchstartX = 0;
     var touchstartY = 0;
-    var touchendX = 0;
-    var touchendY = 0;
     var gesture = '';
   
     document.addEventListener('touchstart', function(event) {
@@ -18,13 +16,13 @@ document.addEventListener('DOMContentLoaded', function() {
   
       // Simplified gesture detection (A-Z)
       if (touchmoveX > touchstartX && touchmoveY < touchstartY) {
-        gesture += 'U'; // Up and right
+        gesture += 'UR'; // Up and right
       } else if (touchmoveX < touchstartX && touchmoveY < touchstartY) {
-        gesture += 'D'; // Down and left
+        gesture += 'UL'; // Up and left
       } else if (touchmoveX > touchstartX && touchmoveY > touchstartY) {
-        gesture += 'R'; // Right and down
+        gesture += 'DR'; // Down and right
       } else if (touchmoveX < touchstartX && touchmoveY > touchstartY) {
-        gesture += 'L'; // Left and up
+        gesture += 'DL'; // Down and left
       } else if (touchmoveX > touchstartX) {
         gesture += 'R'; // Right
       } else if (touchmoveX < touchstartX) {
@@ -34,11 +32,15 @@ document.addEventListener('DOMContentLoaded', function() {
       } else if (touchmoveY < touchstartY) {
         gesture += 'U'; // Up
       }
+  
+      // Update the start coordinates for the next move
+      touchstartX = touchmoveX;
+      touchstartY = touchmoveY;
     }, false);
   
     document.addEventListener('touchend', function(event) {
-      touchendX = event.changedTouches[0].pageX;
-      touchendY = event.changedTouches[0].pageY;
+      var touchendX = event.changedTouches[0].pageX;
+      var touchendY = event.changedTouches[0].pageY;
   
       // Map gesture to alphabet (A-Z)
       switch (gesture) {
@@ -51,9 +53,16 @@ document.addEventListener('DOMContentLoaded', function() {
         case 'RDL':
           document.getElementById("Debug").innerHTML = 'C';
           break;
-        // Add more cases for each alphabet letter (D-Z)
+        case 'LURD':
+          document.getElementById("Debug").innerHTML = 'D';
+          break;
+        case 'LR':
+          document.getElementById("Debug").innerHTML = 'E';
+          break;
+        // Add more cases for each alphabet letter (F-Z)
         default:
-          document.getElementById("Debug").innerHTML = 'Unknown gesture';
+          document.getElementById("Debug").innerHTML = 'Unknown gesture: ' + gesture;
       }
     }, false);
   });
+  
