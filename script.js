@@ -31,6 +31,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (deltaY < -30) {
                 gesture = 'Up';
                 swipeSound.play();
+            }else if (deltaY > 30) {
+                gesture = "Down";
+                swipeSound.play();
             }
         }
     }
