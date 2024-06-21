@@ -2,11 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Touch Detection</title>
+    <style>
+        #touchArea {
+            width: 300px;
+            height: 300px;
+            border: 2px solid black;
+            margin: 50px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #Debug {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
+    <div id="touchArea">Touch Here</div>
+    <p id="Debug">DebugArea</p>
     <script src="script.js"></script>
-    <p id="Debug" style="text-align: center;">DebugArea</p>
 </body>
 </html>
