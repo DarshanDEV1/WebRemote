@@ -2,7 +2,6 @@ const express = require('express');
 const http = require('http');
 const path = require('path');
 const socketio = require('socket.io');
-const dgram = require('dgram');
 const cors = require('cors');
 
 const app = express();
@@ -14,9 +13,7 @@ const io = socketio(server, {
     }
 });
 
-const unityUdpPort = 41234;
-const unityUdpAddress = '127.0.0.1';
-const udpClient = dgram.createSocket('udp4');
+let latestSignal = '';
 
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -26,15 +23,17 @@ io.on('connection', (socket) => {
 
     socket.on('action_signal', (data) => {
         console.log('Received action:', data.signal);
-        const message = Buffer.from(data.signal);
-        udpClient.send(message, unityUdpPort, unityUdpAddress, (err) => {
-            if (err) console.error('UDP message send error:', err);
-        });
+        latestSignal = data.signal;
     });
 
     socket.on('disconnect', () => {
         console.log('Client disconnected');
     });
+});
+
+app.get('/get-latest-signal', (req, res) => {
+    res.json({ signal: latestSignal });
+    latestSignal = '';  // Clear the signal after sending it
 });
 
 const PORT = process.env.PORT || 3000;
