@@ -4,7 +4,6 @@ using UnityEngine;
 using System.Net;
 using System.Net.Sockets;
 using TMPro;
-using UnityEditor.VersionControl;
 
 public class UDPReceiver : MonoBehaviour
 {

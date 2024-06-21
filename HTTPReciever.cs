@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 using TMPro;
 using UnityEngine.UI;
 
-public class HttpReceiver : MonoBehaviour
+public class HTTPReceiver : MonoBehaviour
 {
     [SerializeField] private TMP_InputField m_UrlInputField;
     [SerializeField] private Button m_Submit;
@@ -12,6 +12,7 @@ public class HttpReceiver : MonoBehaviour
     [SerializeField] private string serverUrl = "http://localhost:3000"; // Replace with your ngrok URL
     private float requestInterval = 1.0f;  // Interval in seconds
     private string url = "http://localhost:3000/get-latest-signal";
+
     private void Awake()
     {
         url = serverUrl + "/get-latest-signal";
@@ -65,51 +66,38 @@ public class HttpReceiver : MonoBehaviour
                 if (float.TryParse(coordinates[0], out x) && float.TryParse(coordinates[1], out y))
                 {
                     Vector3 newPos = Camera.main.ScreenToWorldPoint(new Vector3(x, y, Camera.main.nearClipPlane));
-                    transform.position = newPos;
+                    EventManager.Instance.TriggerMouseMove(newPos);
                 }
             }
         }
         else
         {
             Debug.Log("Gesture Received: " + data);
-            // Handle other signals using a switch case
             switch (data)
             {
                 case "single_tap":
-                    Debug.Log("Single Tap");
-                    m_DebugText.text = "Single Tap";
+                    EventManager.Instance.TriggerSingleTap();
                     break;
                 case "double_tap":
-                    Debug.Log("Double Tap");
-                    m_DebugText.text = "Double Tap";
+                    EventManager.Instance.TriggerDoubleTap();
                     break;
                 case "triple_tap":
-                    Debug.Log("Triple Tap");
-                    m_DebugText.text = "Triple Tap";
+                    EventManager.Instance.TriggerTripleTap();
                     break;
                 case "four_taps":
-                    Debug.Log("Four Taps");
-                    m_DebugText.text = "Four Taps";
+                    EventManager.Instance.TriggerFourTaps();
                     break;
                 case "swipe_up":
-                    Debug.Log("Swipe Up");
-                    m_DebugText.text = "Swipe Up";
+                    EventManager.Instance.TriggerSwipeUp();
                     break;
                 case "swipe_down":
-                    Debug.Log("Swipe Down");
-                    m_DebugText.text = "Swipe Down";
+                    EventManager.Instance.TriggerSwipeDown();
                     break;
                 case "swipe_left":
-                    Debug.Log("Swipe Left");
-                    m_DebugText.text = "Swipe Left";
+                    EventManager.Instance.TriggerSwipeLeft();
                     break;
                 case "swipe_right":
-                    Debug.Log("Swipe Right");
-                    m_DebugText.text = "Swipe Right";
-                    break;
-                case "mouse_move":
-                    Debug.Log("Mouse Move");
-                    m_DebugText.text = "Mouse Move";
+                    EventManager.Instance.TriggerSwipeRight();
                     break;
                 default:
                     Debug.LogWarning("Unhandled message: " + data);
