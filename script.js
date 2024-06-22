@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
         mouseMode = !mouseMode;
         modeToggle.classList.toggle('on');
         updateTheme();
-        debug.innerHTML = mouseMode ? 'Mouse Mode' : 'Remote Mode';
+        debug.innerHTML = mouseMode ? 'Mouse Mode /\n Open Android Application' : 'Remote Mode /\n Connect As Remote';
     });
 
     touchArea.addEventListener('touchstart', function(event) {
@@ -157,23 +157,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }, false);
-
-    // connectBtn.addEventListener('click', function() {
-    //     var serverUrl = serverUrlInput.value.trim();
-    //     if (serverUrl) {
-    //         socket = io(serverUrl);
-    //         socket.on('connect', function() {
-    //             debug.innerHTML = 'Connected to server';
-    //             localStorage.setItem('baseUrl', serverUrl);
-    //             alert("Connected To Server...");
-    //         });
-    //         socket.on('disconnect', function() {
-    //             debug.innerHTML = 'Disconnected from server';
-    //             socket = null;
-    //             alert("Disconnected From Server...");
-    //         });
-    //     }
-    // });
     
     connectBtn.addEventListener('click', function() {
             var serverUrl = serverUrlInput.value.trim();
@@ -185,10 +168,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     // alert("Connected To Server...");
 
                     // Try to open Unity app using custom scheme
-                    try {
-                        window.location.href = 'weblogin://connect?serverUrl=' + encodeURIComponent(serverUrl);
-                    } catch (e) {
-                        // console.error("Failed to open Unity app:", e);
+                    if(mouseMode){
+                        try {
+                            window.location.href = 'weblogin://connect?serverUrl=' + encodeURIComponent(serverUrl);
+                        } catch (e) {
+                            console.error("Failed to open Unity app:", e);
+                        }
                     }
                 });
                 socket.on('disconnect', function() {
