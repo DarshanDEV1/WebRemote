@@ -174,26 +174,30 @@ document.addEventListener('DOMContentLoaded', function() {
     //         });
     //     }
     // });
-
+    
     connectBtn.addEventListener('click', function() {
-        var serverUrl = serverUrlInput.value.trim();
-        if (serverUrl) {
-            socket = io(serverUrl);
-            socket.on('connect', function() {
-                debug.innerHTML = 'Connected to server';
-                localStorage.setItem('baseUrl', serverUrl);
-                alert("Connected To Server...");
+            var serverUrl = serverUrlInput.value.trim();
+            if (serverUrl) {
+                socket = io(serverUrl);
+                socket.on('connect', function() {
+                    debug.innerHTML = 'Connected to server';
+                    localStorage.setItem('baseUrl', serverUrl);
+                    // alert("Connected To Server...");
 
-                // Try to open Unity app using custom scheme
-                window.location.href = 'weblogin://connect?serverUrl=' + encodeURIComponent(serverUrl);
-            });
-            socket.on('disconnect', function() {
-                debug.innerHTML = 'Disconnected from server';
-                socket = null;
-                alert("Disconnected From Server...");
-            });
-        }
-    });
+                    // Try to open Unity app using custom scheme
+                    try {
+                        window.location.href = 'weblogin://connect?serverUrl=' + encodeURIComponent(serverUrl);
+                    } catch (e) {
+                        console.error("Failed to open Unity app:", e);
+                    }
+                });
+                socket.on('disconnect', function() {
+                    debug.innerHTML = 'Disconnected from server';
+                    socket = null;
+                    // alert("Disconnected From Server...");
+                });
+            }
+        });
 
     updateTheme();
 });
