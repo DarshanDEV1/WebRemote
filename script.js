@@ -158,16 +158,39 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }, false);
 
+    // connectBtn.addEventListener('click', function() {
+    //     var serverUrl = serverUrlInput.value.trim();
+    //     if (serverUrl) {
+    //         socket = io(serverUrl);
+    //         socket.on('connect', function() {
+    //             debug.innerHTML = 'Connected to server';
+    //             localStorage.setItem('baseUrl', serverUrl);
+    //             alert("Connected To Server...");
+    //         });
+    //         socket.on('disconnect', function() {
+    //             debug.innerHTML = 'Disconnected from server';
+    //             socket = null;
+    //             alert("Disconnected From Server...");
+    //         });
+    //     }
+    // });
+
     connectBtn.addEventListener('click', function() {
         var serverUrl = serverUrlInput.value.trim();
         if (serverUrl) {
             socket = io(serverUrl);
             socket.on('connect', function() {
                 debug.innerHTML = 'Connected to server';
+                localStorage.setItem('baseUrl', serverUrl);
+                alert("Connected To Server...");
+
+                // Try to open Unity app using custom scheme
+                window.location.href = 'weblogin://connect?serverUrl=' + encodeURIComponent(serverUrl);
             });
             socket.on('disconnect', function() {
                 debug.innerHTML = 'Disconnected from server';
                 socket = null;
+                alert("Disconnected From Server...");
             });
         }
     });
