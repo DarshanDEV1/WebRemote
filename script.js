@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     try {
                         window.location.href = 'weblogin://connect?serverUrl=' + encodeURIComponent(serverUrl);
                     } catch (e) {
-                        console.error("Failed to open Unity app:", e);
+                        // console.error("Failed to open Unity app:", e);
                     }
                 });
                 socket.on('disconnect', function() {
