@@ -186,7 +186,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     // Try to open Unity app using custom scheme
                     try {
-                        window.location.href = 'weblogin://connect?serverUrl=' + encodeURIComponent(serverUrl);
+                        // window.location.href = 'weblogin://connect?serverUrl=' + encodeURIComponent(serverUrl);
+                        window.location.href = serverUrl;
                     } catch (e) {
                         console.error("Failed to open Unity app:", e);
                     }
